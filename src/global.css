@@ -1,0 +1,16 @@
+@import 'tailwindcss';
+@import 'uniwind';
+@import '@juandavidfuentes/indomitox-shared/tokens/native.css';
+
+/*
+ * En nativo cada peso es una familia distinta (así Android no "inventa" negritas).
+ * Los nombres coinciden con los que carga expo-font en src/app/_layout.tsx.
+ */
+@theme {
+  --font-sans: 'Barlow_400Regular';
+  --font-sans-medium: 'Barlow_500Medium';
+  --font-sans-semibold: 'Barlow_600SemiBold';
+  --font-sans-bold: 'Barlow_700Bold';
+  --font-display: 'BarlowCondensed_700Bold';
+  --font-display-semibold: 'BarlowCondensed_600SemiBold';
+}
