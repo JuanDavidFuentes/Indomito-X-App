@@ -10,7 +10,7 @@
     "ios": {
       "bundleIdentifier": "co.indomitox.app",
       "supportsTablet": false,
-      "icon": "./assets/expo.icon",
+      "icon": "./assets/images/icon.png",
       "infoPlist": {
         "ITSAppUsesNonExemptEncryption": false
       }
@@ -36,7 +36,11 @@
         {
           "backgroundColor": "#0B1120",
           "image": "./assets/images/splash-icon.png",
-          "imageWidth": 76
+          "imageWidth": 140,
+          "dark": {
+            "backgroundColor": "#0B1120",
+            "image": "./assets/images/splash-icon.png"
+          }
         }
       ],
       "expo-localization",

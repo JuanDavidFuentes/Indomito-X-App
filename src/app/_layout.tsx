@@ -10,6 +10,7 @@ import {
 import {
   BarlowCondensed_600SemiBold,
   BarlowCondensed_700Bold,
+  BarlowCondensed_800ExtraBold_Italic,
 } from '@expo-google-fonts/barlow-condensed';
 import { useFonts } from 'expo-font';
 import { DarkTheme, DefaultTheme, SplashScreen, Stack, ThemeProvider } from 'expo-router';
@@ -29,6 +30,7 @@ export default function RootLayout() {
     Barlow_700Bold,
     BarlowCondensed_600SemiBold,
     BarlowCondensed_700Bold,
+    BarlowCondensed_800ExtraBold_Italic,
   });
 
   useEffect(() => {

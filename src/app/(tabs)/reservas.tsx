@@ -4,5 +4,5 @@ import { ComingSoon } from '@/components/coming-soon';
 
 export default function ReservationsScreen() {
   const { t } = useTranslation();
-  return <ComingSoon icon={CalendarCheck} title={t('nav.reservations')} />;
+  return <ComingSoon icon={CalendarCheck} title={t('nav.reservations')} body={t('soon.reservations')} />;
 }

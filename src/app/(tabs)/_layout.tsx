@@ -1,3 +1,4 @@
+import { colors } from '@juandavidfuentes/indomitox-shared/tokens';
 import { Tabs } from 'expo-router/js-tabs';
 import {
   CalendarCheck,
@@ -9,31 +10,45 @@ import {
 } from 'phosphor-react-native';
 import type { ComponentType } from 'react';
 import { useTranslation } from 'react-i18next';
-import type { ColorValue } from 'react-native';
-import { usePalette } from '@/lib/theme';
+import { View, type ColorValue } from 'react-native';
 
 type TabIcon = ComponentType<IconProps>;
 
+// La barra de pestañas es "Noche" en ambos temas: sus colores salen siempre del tema oscuro.
+const BAR = colors.dark;
+
 function icon(Icon: TabIcon) {
-  // Pestaña activa en relleno, inactiva en contorno (una sola variante por estado).
+  // Pestaña activa: ícono relleno sobre una píldora Lava; inactiva: contorno.
   // Los tint colors vienen de los tokens (hex), así que el cast a string es seguro.
   return function TabBarIcon({ color, focused }: { color: ColorValue; focused: boolean }) {
-    return <Icon size={26} color={color as string} weight={focused ? 'fill' : 'regular'} />;
+    return (
+      <View
+        style={{
+          width: 52,
+          height: 30,
+          borderRadius: 15,
+          alignItems: 'center',
+          justifyContent: 'center',
+          backgroundColor: focused ? BAR.brand : 'transparent',
+        }}
+      >
+        <Icon size={22} color={color as string} weight={focused ? 'fill' : 'regular'} />
+      </View>
+    );
   };
 }
 
 export default function TabsLayout() {
   const { t } = useTranslation();
-  const palette = usePalette();
 
   return (
     <Tabs
       screenOptions={{
         headerShown: false,
-        tabBarActiveTintColor: palette.primary,
-        tabBarInactiveTintColor: palette['muted-foreground'],
-        tabBarStyle: { backgroundColor: palette.card, borderTopColor: palette.border },
-        tabBarLabelStyle: { fontFamily: 'Barlow_600SemiBold', fontSize: 12 },
+        tabBarActiveTintColor: BAR['night-foreground'],
+        tabBarInactiveTintColor: BAR['muted-foreground'],
+        tabBarStyle: { backgroundColor: BAR.night, borderTopColor: BAR.border },
+        tabBarLabelStyle: { fontFamily: 'Barlow_600SemiBold', fontSize: 12, marginTop: 2 },
       }}
     >
       <Tabs.Screen name="index" options={{ title: t('nav.explore'), tabBarIcon: icon(Compass) }} />

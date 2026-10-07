@@ -13,4 +13,6 @@
   --font-sans-bold: 'Barlow_700Bold';
   --font-display: 'BarlowCondensed_700Bold';
   --font-display-semibold: 'BarlowCondensed_600SemiBold';
+  /* Titulares de aventura: 800 itálica (se inclina hacia adelante). */
+  --font-display-italic: 'BarlowCondensed_800ExtraBold_Italic';
 }

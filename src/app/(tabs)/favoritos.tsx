@@ -4,5 +4,5 @@ import { ComingSoon } from '@/components/coming-soon';
 
 export default function FavoritesScreen() {
   const { t } = useTranslation();
-  return <ComingSoon icon={Heart} title={t('nav.favorites')} />;
+  return <ComingSoon icon={Heart} title={t('nav.favorites')} body={t('soon.favorites')} />;
 }
