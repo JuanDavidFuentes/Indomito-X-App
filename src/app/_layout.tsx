@@ -40,7 +40,7 @@ function createQueryClient() {
   });
 }
 
-/** Rutas: pestañas, autenticación (modal) y la cuenta, que solo existe con sesión. */
+/** Rutas: pestañas, autenticación (modal), y la cuenta y el panel del Guía, que solo existen con sesión. */
 function RootStack() {
   const { status } = useAuth();
   return (
@@ -49,6 +49,7 @@ function RootStack() {
       <Stack.Screen name="auth" options={{ presentation: 'modal', animation: 'slide_from_bottom' }} />
       <Stack.Protected guard={status === 'signedIn'}>
         <Stack.Screen name="cuenta" />
+        <Stack.Screen name="panel" />
       </Stack.Protected>
     </Stack>
   );

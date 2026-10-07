@@ -21,6 +21,17 @@ export const API_URL =
 export const WEB_URL =
   process.env.EXPO_PUBLIC_WEB_URL ?? (Platform.OS === 'android' ? 'http://10.0.2.2:3000' : 'http://localhost:3000');
 
+/**
+ * Imágenes subidas por los usuarios (bucket público de S3). En local la API las entrega como
+ * `http://localhost:9000/…`, que desde el emulador de Android es 10.0.2.2 (como la API).
+ */
+export function mediaUrl(url: string | null | undefined): string | null {
+  if (!url) return null;
+  if (Platform.OS !== 'android') return url;
+  const host = /^https?:\/\/([^/:]+)/.exec(API_URL)?.[1];
+  return host ? url.replace(/^(https?:\/\/)(localhost|127\.0\.0\.1)(?=[:/])/, `$1${host}`) : url;
+}
+
 const REFRESH_KEY = 'auth.refreshToken';
 
 /** Error de la API con su código estable (los textos salen de i18n `errors.<code>`). */

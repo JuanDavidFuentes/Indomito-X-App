@@ -9,6 +9,7 @@ import Svg, { Polygon } from 'react-native-svg';
 import { Tape } from '@/components/brand';
 import { TopoPattern } from '@/components/topo-pattern';
 import { Button } from '@/components/ui/button';
+import { mediaUrl } from '@/lib/api';
 import type { AuthStatus } from '@/lib/auth';
 import { usePalette } from '@/lib/theme';
 
@@ -21,7 +22,7 @@ export function initials(name: string): string {
   return letters.join('').toUpperCase();
 }
 
-/** Foto de Google si la hay; si no, las iniciales sobre la marca (texto Noche, 5,3:1). */
+/** La foto que subió (o la de Google); si no hay, las iniciales sobre la marca (texto Noche, 5,3:1). */
 export function Avatar({ user, size = 72 }: { user: Pick<AuthUser, 'name' | 'avatarUrl'>; size?: number }) {
   return (
     <View
@@ -30,7 +31,7 @@ export function Avatar({ user, size = 72 }: { user: Pick<AuthUser, 'name' | 'ava
       accessible={false}
     >
       {user.avatarUrl ? (
-        <Image source={{ uri: user.avatarUrl }} style={{ width: size, height: size }} contentFit="cover" />
+        <Image source={{ uri: mediaUrl(user.avatarUrl)! }} style={{ width: size, height: size }} contentFit="cover" />
       ) : (
         <Text className="font-display text-night" style={{ fontSize: size * 0.38 }}>
           {initials(user.name)}

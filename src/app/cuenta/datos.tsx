@@ -113,7 +113,7 @@ function ProfileDataForm({ me }: { me: MeResponse }) {
           </View>
         )}
       />
-      <Text className="font-sans text-sm text-muted-foreground">{t('account.photoSoon')}</Text>
+      <Text className="font-sans text-sm text-muted-foreground">{t('account.photoOnWeb')}</Text>
       {formError ? <FormAlert message={formError} /> : null}
       <Button
         label={t('common.save')}

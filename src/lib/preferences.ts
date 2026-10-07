@@ -8,7 +8,7 @@ import Storage from 'expo-sqlite/kv-store';
  */
 export type ThemeChoice = 'system' | 'light' | 'dark';
 
-const KEYS = { locale: 'prefs.locale', theme: 'prefs.theme' } as const;
+const KEYS = { locale: 'prefs.locale', theme: 'prefs.theme', hostPanelNotice: 'prefs.hostPanelNoticeDismissed' } as const;
 const THEMES: readonly ThemeChoice[] = ['system', 'light', 'dark'];
 
 function read(key: string): string | null {
@@ -43,4 +43,13 @@ export function getStoredTheme(): ThemeChoice {
 
 export function setStoredTheme(theme: ThemeChoice): void {
   write(KEYS.theme, theme);
+}
+
+/** MOB-02: el Guía eligió "No volver a mostrar" el aviso de administrar desde la web. */
+export function isHostPanelNoticeDismissed(): boolean {
+  return read(KEYS.hostPanelNotice) === '1';
+}
+
+export function dismissHostPanelNotice(): void {
+  write(KEYS.hostPanelNotice, '1');
 }

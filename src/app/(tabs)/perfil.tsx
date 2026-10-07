@@ -17,9 +17,8 @@ import { Alert, Linking, Pressable, ScrollView, Text, View } from 'react-native'
 import { Uniwind } from 'uniwind';
 import { AccountMenu } from '@/components/account/menu';
 import { ProfileHeader } from '@/components/account/profile-header';
-import { Tape } from '@/components/brand';
 import { FocusAwareStatusBar } from '@/components/focus-aware-status-bar';
-import { TopoPattern } from '@/components/topo-pattern';
+import { HostCard } from '@/components/host/host-card';
 import { Button } from '@/components/ui/button';
 import { api, ApiError } from '@/lib/api';
 import { ME_KEY, useMe, useParticipants } from '@/lib/account';
@@ -118,20 +117,7 @@ export default function ProfileScreen() {
           {signedIn ? (
             <>
               {user.emailVerified ? null : <VerifyBanner email={user.email} />}
-              {user.signupIntent === 'HOST' ? (
-                <View className="overflow-hidden rounded-xl border border-transparent bg-night p-5 dark:border-border dark:bg-card">
-                  <TopoPattern color={palette.brand} opacity={0.2} variant="screen" />
-                  <View className="gap-2">
-                    <Tape label={t('common.comingSoon')} small />
-                    <Text className="font-display-italic text-2xl uppercase text-night-foreground">
-                      {t('account.hostSoonTitle')}
-                    </Text>
-                    <Text className="font-sans text-[15px] leading-[21px] text-night-foreground/85">
-                      {t('account.hostSoonBody')}
-                    </Text>
-                  </View>
-                </View>
-              ) : null}
+              <HostCard user={user} />
               <AccountMenu
                 items={[
                   {
