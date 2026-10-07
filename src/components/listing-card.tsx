@@ -1,5 +1,6 @@
 import type { Difficulty } from '@juandavidfuentes/indomitox-shared';
 import { Image } from 'expo-image';
+import { router } from 'expo-router';
 import { Heart } from 'phosphor-react-native';
 import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
@@ -7,6 +8,7 @@ import { StyleSheet, Text, View, type ImageSourcePropType } from 'react-native';
 import { Tape } from '@/components/brand';
 import { DifficultyBadge } from '@/components/difficulty';
 import { PressableScale } from '@/components/pressable-scale';
+import { useAuth } from '@/lib/auth';
 import { usePalette } from '@/lib/theme';
 
 export interface ListingCardProps {
@@ -37,8 +39,11 @@ export function ListingCard({
 }: ListingCardProps) {
   const { t } = useTranslation();
   const palette = usePalette();
+  const { status } = useAuth();
   // En F4 el favorito se guarda en la API; por ahora solo cambia en pantalla.
   const [saved, setSaved] = useState(false);
+  // AUTH-07: sin sesión se pide la cuenta (modal) y al terminar se vuelve aquí.
+  const onFavorite = () => (status === 'signedIn' ? setSaved((value) => !value) : router.push('/auth/ingresar'));
 
   return (
     <View style={{ width }} className="gap-1.5">
@@ -51,7 +56,7 @@ export function ListingCard({
           accessibilityRole="button"
           accessibilityLabel={`${t('listing.addToFavorites')}: ${title}`}
           accessibilityState={{ selected: saved }}
-          onPress={() => setSaved((value) => !value)}
+          onPress={onFavorite}
           pressedScale={0.85}
           style={{ position: 'absolute', top: 4, right: 4 }}
           className="size-11 items-center justify-center rounded-full bg-night/45"
