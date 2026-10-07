@@ -14,6 +14,7 @@ import type { ComponentType } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Pressable, ScrollView, Text, TextInput, View } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
+import { FocusAwareStatusBar } from '@/components/focus-aware-status-bar';
 import { usePalette } from '@/lib/theme';
 
 const ELEMENTS: Record<
@@ -44,6 +45,7 @@ export default function ExploreScreen() {
 
   return (
     <ScrollView className="flex-1 bg-background" contentContainerClassName="pb-10">
+      <FocusAwareStatusBar style="light" />
       {/* Hero "Noche" */}
       <View className="bg-night px-5 pb-8" style={{ paddingTop: insets.top + 24 }}>
         <Text className="font-display-semibold text-xs uppercase tracking-[3px] text-accent">
