@@ -8,12 +8,15 @@ import {
 } from '@juandavidfuentes/indomitox-shared';
 import { useQueryClient } from '@tanstack/react-query';
 import { Image } from 'expo-image';
-import { router } from 'expo-router';
+import { router, type Href } from 'expo-router';
 import {
   ArrowSquareOut,
   Bank,
+  CalendarBlank,
   CalendarX,
   CaretLeft,
+  CaretRight,
+  Compass,
   Certificate,
   CheckCircle,
   CircleIcon as Circle,
@@ -31,12 +34,14 @@ import Svg, { Polygon } from 'react-native-svg';
 import { LogoMark, Tape } from '@/components/brand';
 import { FocusAwareStatusBar } from '@/components/focus-aware-status-bar';
 import { HostStatusChip } from '@/components/host/status-chip';
+import { PressableScale } from '@/components/pressable-scale';
 import { TopoPattern } from '@/components/topo-pattern';
 import { Button } from '@/components/ui/button';
 import { api, mediaUrl } from '@/lib/api';
 import { useAuth } from '@/lib/auth';
 import { useErrorText } from '@/lib/forms';
 import { HOST_KEY, openOnWeb, useMyHost } from '@/lib/host';
+import { formatInstant, useHostListings } from '@/lib/listings';
 import { usePalette } from '@/lib/theme';
 
 const CUT = 22;
@@ -77,6 +82,66 @@ function ReasonBox({ reason }: { reason: string }) {
         {t('host.reasonLabel')}
       </Text>
       <Text className="font-sans text-[15px] leading-[21px] text-foreground">{reason}</Text>
+    </View>
+  );
+}
+
+/** Acceso a una sección del panel móvil (publicaciones o calendario). */
+function Tile({ icon: Icon, title, body, href }: { icon: ComponentType<IconProps>; title: string; body: string; href: Href }) {
+  const palette = usePalette();
+  return (
+    <PressableScale
+      pressedScale={0.98}
+      onPress={() => router.push(href)}
+      accessibilityRole="button"
+      accessibilityLabel={`${title}. ${body}`}
+      className="min-h-20 flex-row items-center gap-4 rounded-xl border border-border bg-card px-4 py-4"
+    >
+      <View className="size-12 items-center justify-center rounded-xl bg-primary/10">
+        <Icon size={26} color={palette.primary} weight="duotone" />
+      </View>
+      <View className="flex-1 gap-0.5">
+        <Text className="font-display-italic text-xl uppercase text-card-foreground">{title}</Text>
+        <Text className="font-sans text-sm text-muted-foreground">{body}</Text>
+      </View>
+      <CaretRight size={20} color={palette['muted-foreground']} />
+    </PressableScale>
+  );
+}
+
+/** Publicaciones y calendario del Guía aprobado (MOB-01): conteos y la próxima salida. */
+function Operation({ locale }: { locale: Locale }) {
+  const { t } = useTranslation();
+  const { data } = useHostListings('ALL');
+  const items = data?.items ?? [];
+  const published = data?.counts.PUBLISHED ?? 0;
+  const next = items
+    .map((item) => item.nextSlotAt)
+    .filter((value): value is string => value !== null)
+    .sort()[0];
+  return (
+    <View className="gap-3">
+      <Text accessibilityRole="header" className="font-display-italic text-2xl uppercase text-foreground">
+        {t('hostApp.operationTitle')}
+      </Text>
+      <Tile
+        icon={Compass}
+        title={t('listings.title')}
+        body={items.length ? t('hostApp.listingsTile', { published, total: items.length }) : t('hostApp.listingsTileEmpty')}
+        href="/panel/publicaciones"
+      />
+      <Tile
+        icon={CalendarBlank}
+        title={t('calendar.title')}
+        body={
+          next
+            ? t('hostApp.calendarTile', {
+                date: formatInstant(next, locale, { weekday: 'short', day: 'numeric', month: 'short', hour: 'numeric', minute: '2-digit' }),
+              })
+            : t('hostApp.calendarTileEmpty')
+        }
+        href="/panel/calendario"
+      />
     </View>
   );
 }
@@ -133,6 +198,8 @@ function HostSummary({ mine, locale }: { mine: MyHostResponse; locale: Locale })
           </Text>
         ) : null}
       </Card>
+
+      {host.status === 'APPROVED' ? <Operation locale={locale} /> : null}
 
       {host.status === 'APPROVED' ? null : (
         <View className="gap-3">
@@ -212,7 +279,7 @@ function HostSummary({ mine, locale }: { mine: MyHostResponse; locale: Locale })
           <Button
             label={t('hostApp.openPublicPage')}
             variant="outline"
-            onPress={() => openOnWeb(locale, '/guias/[slug]', host.slug!)}
+            onPress={() => openOnWeb(locale, '/guias/[slug]', { slug: host.slug! })}
           />
         ) : null}
         <Text className="text-center font-sans text-sm text-muted-foreground">
@@ -280,7 +347,10 @@ function StartHost({ onStarted }: { onStarted: (mine: MyHostResponse) => void })
   );
 }
 
-/** Panel del Guía en la app (MOB-01/02 en F2: estado del alta y acceso a la web para completarla). */
+/**
+ * Panel del Guía en la app: estado del alta y acceso a la web (MOB-02) y, aprobado, sus
+ * publicaciones y su calendario con las acciones rápidas (MOB-01/03).
+ */
 export default function HostPanelScreen() {
   const { t, i18n } = useTranslation();
   const palette = usePalette();

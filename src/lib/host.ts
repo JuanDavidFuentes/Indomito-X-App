@@ -1,4 +1,4 @@
-import { webUrl, type Locale, type MyHostResponse } from '@juandavidfuentes/indomitox-shared';
+import { webUrl, type Locale, type MyHostResponse, type WebPathname } from '@juandavidfuentes/indomitox-shared';
 import { useQuery } from '@tanstack/react-query';
 import { router, type Href } from 'expo-router';
 import * as WebBrowser from 'expo-web-browser';
@@ -30,7 +30,10 @@ export function openHostPanel(): void {
   router.push((isHostPanelNoticeDismissed() ? '/panel' : '/panel/aviso') as Href);
 }
 
-/** Abre una página de la web en el navegador del sistema (el alta se completa allí). */
-export function openOnWeb(locale: Locale, pathname: '/panel/verificacion' | '/guias/[slug]', slug?: string): void {
-  void WebBrowser.openBrowserAsync(webUrl(WEB_URL, pathname, locale, {}, slug ? { slug } : undefined));
+/**
+ * Abre una página de la web en el navegador del sistema: el alta, la edición completa de las
+ * publicaciones y lo que el panel móvil no hace (MOB-02).
+ */
+export function openOnWeb(locale: Locale, pathname: WebPathname, params?: Record<string, string>): void {
+  void WebBrowser.openBrowserAsync(webUrl(WEB_URL, pathname, locale, {}, params));
 }
