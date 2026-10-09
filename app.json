@@ -13,7 +13,11 @@
       "icon": "./assets/images/icon.png",
       "infoPlist": {
         "ITSAppUsesNonExemptEncryption": false
-      }
+      },
+      "associatedDomains": [
+        "applinks:indomitox.co",
+        "applinks:www.indomitox.co"
+      ]
     },
     "android": {
       "package": "co.indomitox.app",
@@ -23,7 +27,49 @@
         "backgroundImage": "./assets/images/android-icon-background.png",
         "monochromeImage": "./assets/images/android-icon-monochrome.png"
       },
-      "predictiveBackGestureEnabled": true
+      "predictiveBackGestureEnabled": true,
+      "intentFilters": [
+        {
+          "action": "VIEW",
+          "autoVerify": true,
+          "data": [
+            {
+              "scheme": "https",
+              "host": "indomitox.co",
+              "pathPrefix": "/es/"
+            },
+            {
+              "scheme": "https",
+              "host": "indomitox.co",
+              "pathPrefix": "/en/"
+            },
+            {
+              "scheme": "https",
+              "host": "indomitox.co",
+              "pathPrefix": "/fr/"
+            },
+            {
+              "scheme": "https",
+              "host": "www.indomitox.co",
+              "pathPrefix": "/es/"
+            },
+            {
+              "scheme": "https",
+              "host": "www.indomitox.co",
+              "pathPrefix": "/en/"
+            },
+            {
+              "scheme": "https",
+              "host": "www.indomitox.co",
+              "pathPrefix": "/fr/"
+            }
+          ],
+          "category": [
+            "BROWSABLE",
+            "DEFAULT"
+          ]
+        }
+      ]
     },
     "web": {
       "output": "static",
@@ -46,7 +92,17 @@
       "expo-localization",
       "expo-font",
       "expo-secure-store",
-      "expo-sqlite"
+      "expo-sqlite",
+      [
+        "expo-location",
+        {
+          "locationWhenInUsePermission": "Indómito X usa tu ubicación solo cuando tocas «Cerca de mí», para mostrarte las aventuras cercanas.",
+          "isIosBackgroundLocationEnabled": false,
+          "isAndroidBackgroundLocationEnabled": false,
+          "isAndroidForegroundServiceEnabled": false
+        }
+      ],
+      "@maplibre/maplibre-react-native"
     ],
     "experiments": {
       "typedRoutes": true,
