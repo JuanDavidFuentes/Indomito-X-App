@@ -1,4 +1,4 @@
-import { LOCALES, type Locale } from '@juandavidfuentes/indomitox-shared';
+import { CURRENCIES, LOCALES, type Currency, type Locale } from '@juandavidfuentes/indomitox-shared';
 import Storage from 'expo-sqlite/kv-store';
 
 /**
@@ -8,7 +8,12 @@ import Storage from 'expo-sqlite/kv-store';
  */
 export type ThemeChoice = 'system' | 'light' | 'dark';
 
-const KEYS = { locale: 'prefs.locale', theme: 'prefs.theme', hostPanelNotice: 'prefs.hostPanelNoticeDismissed' } as const;
+const KEYS = {
+  locale: 'prefs.locale',
+  theme: 'prefs.theme',
+  hostPanelNotice: 'prefs.hostPanelNoticeDismissed',
+  currency: 'prefs.currency',
+} as const;
 const THEMES: readonly ThemeChoice[] = ['system', 'light', 'dark'];
 
 function read(key: string): string | null {
@@ -52,4 +57,14 @@ export function isHostPanelNoticeDismissed(): boolean {
 
 export function dismissHostPanelNotice(): void {
   write(KEYS.hostPanelNotice, '1');
+}
+
+/** Moneda del precio aproximado (SRCH-07); null = la del idioma. */
+export function getStoredCurrency(): Currency | null {
+  const value = read(KEYS.currency);
+  return value && (CURRENCIES as readonly string[]).includes(value) ? (value as Currency) : null;
+}
+
+export function setStoredCurrency(currency: Currency): void {
+  write(KEYS.currency, currency);
 }

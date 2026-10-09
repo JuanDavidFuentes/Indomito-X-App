@@ -1,6 +1,8 @@
 import { PHOTO_CREDITS } from '@juandavidfuentes/indomitox-shared';
 import { motion } from '@juandavidfuentes/indomitox-shared/tokens';
 import { Image } from 'expo-image';
+import { router } from 'expo-router';
+import { useState } from 'react';
 import { MagnifyingGlass, MapPin } from 'phosphor-react-native';
 import { useTranslation } from 'react-i18next';
 import { StyleSheet, Text, TextInput, View } from 'react-native';
@@ -26,6 +28,9 @@ export function ExploreHero() {
   const palette = usePalette();
   const insets = useSafeAreaInsets();
   const credit = PHOTO_CREDITS[HERO];
+  const [text, setText] = useState('');
+  // El buscador abre el Mapa con el destino: la API reconoce si el texto es una zona o un municipio.
+  const search = () => router.navigate({ pathname: '/mapa', params: text.trim() ? { q: text.trim() } : {} });
 
   return (
     <View className="overflow-hidden bg-night" style={{ paddingTop: insets.top + 10 }}>
@@ -72,10 +77,14 @@ export function ExploreHero() {
               placeholderTextColor={palette['muted-foreground']}
               className="h-12 flex-1 font-sans text-base text-card-foreground"
               returnKeyType="search"
+              value={text}
+              onChangeText={setText}
+              onSubmitEditing={search}
             />
             <PressableScale
               accessibilityRole="button"
               accessibilityLabel={t('home.searchButton')}
+              onPress={search}
               className="h-12 w-12 items-center justify-center rounded-xl bg-primary"
             >
               <MagnifyingGlass size={22} color={palette['primary-foreground']} weight="bold" />

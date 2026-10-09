@@ -13,11 +13,13 @@ import {
   BarlowCondensed_700Bold,
   BarlowCondensed_800ExtraBold_Italic,
 } from '@expo-google-fonts/barlow-condensed';
+import { BottomSheetModalProvider } from '@gorhom/bottom-sheet';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { useFonts } from 'expo-font';
 import { DarkTheme, DefaultTheme, SplashScreen, Stack, ThemeProvider } from 'expo-router';
 import { StatusBar } from 'expo-status-bar';
 import { useEffect, useState } from 'react';
+import { GestureHandlerRootView } from 'react-native-gesture-handler';
 import { Uniwind } from 'uniwind';
 import { ApiError } from '@/lib/api';
 import { AuthProvider, useAuth } from '@/lib/auth';
@@ -40,15 +42,20 @@ function createQueryClient() {
   });
 }
 
-/** Rutas: pestañas, autenticación (modal), y la cuenta y el panel del Guía, que solo existen con sesión. */
+/**
+ * Rutas: pestañas, el detalle de una publicación, autenticación (modal), y la cuenta, los
+ * favoritos y el panel del Guía, que solo existen con sesión.
+ */
 function RootStack() {
   const { status } = useAuth();
   return (
     <Stack screenOptions={{ headerShown: false }}>
       <Stack.Screen name="(tabs)" />
+      <Stack.Screen name="listing/[slug]" />
       <Stack.Screen name="auth" options={{ presentation: 'modal', animation: 'slide_from_bottom' }} />
       <Stack.Protected guard={status === 'signedIn'}>
         <Stack.Screen name="cuenta" />
+        <Stack.Screen name="favoritos" />
         <Stack.Screen name="panel" />
       </Stack.Protected>
     </Stack>
@@ -90,13 +97,17 @@ export default function RootLayout() {
   };
 
   return (
-    <QueryClientProvider client={queryClient}>
-      <AuthProvider>
-        <ThemeProvider value={navigationTheme}>
-          <StatusBar style={scheme === 'dark' ? 'light' : 'dark'} />
-          <RootStack />
-        </ThemeProvider>
-      </AuthProvider>
-    </QueryClientProvider>
+    <GestureHandlerRootView style={{ flex: 1 }}>
+      <QueryClientProvider client={queryClient}>
+        <AuthProvider>
+          <ThemeProvider value={navigationTheme}>
+            <BottomSheetModalProvider>
+              <StatusBar style={scheme === 'dark' ? 'light' : 'dark'} />
+              <RootStack />
+            </BottomSheetModalProvider>
+          </ThemeProvider>
+        </AuthProvider>
+      </QueryClientProvider>
+    </GestureHandlerRootView>
   );
 }

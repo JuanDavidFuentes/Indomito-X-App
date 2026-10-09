@@ -1,10 +1,11 @@
 import { ELEMENT_PHOTOS, SPORT_ELEMENTS, type SportElement } from '@juandavidfuentes/indomitox-shared';
 import { elementTints, motion } from '@juandavidfuentes/indomitox-shared/tokens';
 import { Image } from 'expo-image';
+import { router } from 'expo-router';
 import { Flashlight, Lightning, Mountains, Waves, Wind, type IconProps } from 'phosphor-react-native';
 import type { ComponentType } from 'react';
 import { useTranslation } from 'react-i18next';
-import { ScrollView, StyleSheet, Text, View } from 'react-native';
+import { Pressable, ScrollView, StyleSheet, Text, View } from 'react-native';
 import Animated, { FadeInRight } from 'react-native-reanimated';
 import { PhotoShade } from '@/components/photo-shade';
 import { PHOTOS } from '@/lib/photos';
@@ -43,7 +44,12 @@ export function ElementCarousel() {
             entering={FadeInRight.duration(motion.slow * 1.6).delay(index * motion.stagger * 2)}
             style={{ width: CARD_WIDTH, height: 206 }}
           >
-            <View className="flex-1 overflow-hidden rounded-2xl border border-border">
+            <Pressable
+              accessibilityRole="button"
+              accessibilityLabel={`${t(`elements.${element}`)}: ${t(`home.elementExamples.${element}`)}`}
+              onPress={() => router.navigate({ pathname: '/mapa', params: { element } })}
+              className="flex-1 overflow-hidden rounded-2xl border border-border active:opacity-90"
+            >
               <Image
                 source={PHOTOS[ELEMENT_PHOTOS[element]]}
                 style={StyleSheet.absoluteFill}
@@ -73,7 +79,7 @@ export function ElementCarousel() {
                   </Text>
                 </View>
               </View>
-            </View>
+            </Pressable>
           </Animated.View>
         );
       })}

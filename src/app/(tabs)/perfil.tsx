@@ -1,4 +1,4 @@
-import { LOCALES, PHOTO_CREDITS, PHOTO_IDS, type Locale, type MeResponse } from '@juandavidfuentes/indomitox-shared';
+import { DISPLAY_CURRENCIES, LOCALES, PHOTO_CREDITS, PHOTO_IDS, type Locale, type MeResponse } from '@juandavidfuentes/indomitox-shared';
 import { useQueryClient } from '@tanstack/react-query';
 import type { Href } from 'expo-router';
 import {
@@ -23,6 +23,7 @@ import { Button } from '@/components/ui/button';
 import { api, ApiError } from '@/lib/api';
 import { ME_KEY, useMe, useParticipants } from '@/lib/account';
 import { useAuth } from '@/lib/auth';
+import { useCurrency } from '@/lib/explore';
 import { useErrorText } from '@/lib/forms';
 import { getStoredTheme, setStoredTheme, type ThemeChoice } from '@/lib/preferences';
 import { useColorTheme, usePalette } from '@/lib/theme';
@@ -92,6 +93,7 @@ export default function ProfileScreen() {
   const { data: me } = useMe();
   const { data: participants } = useParticipants();
   const [theme, setTheme] = useState<ThemeChoice>(getStoredTheme);
+  const [currency, setCurrency] = useCurrency();
   const signedIn = status === 'signedIn' && user;
 
   const applyTheme = (choice: ThemeChoice) => {
@@ -174,6 +176,17 @@ export default function ProfileScreen() {
               <Choice label={t('common.themeLight')} selected={theme === 'light'} onPress={() => applyTheme('light')} />
               <Choice label={t('common.themeDark')} selected={theme === 'dark'} onPress={() => applyTheme('dark')} />
             </View>
+          </View>
+
+          {/* SRCH-07: moneda del precio aproximado (se cobra siempre en pesos). */}
+          <View className="gap-3" accessibilityRole="radiogroup">
+            <Text className="font-sans-semibold text-lg text-foreground">{t('currency.label')}</Text>
+            <View className="flex-row gap-2">
+              {DISPLAY_CURRENCIES.map((option) => (
+                <Choice key={option} label={option} selected={currency === option} onPress={() => setCurrency(option)} />
+              ))}
+            </View>
+            <Text className="font-sans text-sm text-muted-foreground">{t('currency.hint')}</Text>
           </View>
 
           {/* Créditos de las fotos: CC BY y CC BY-SA exigen autor, licencia y fuente. */}
